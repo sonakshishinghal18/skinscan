@@ -165,13 +165,22 @@ def call_claude(image_b64: str, media_type: str) -> dict:
     log.info("Claude response received (%d chars), input_tokens=%d, output_tokens=%d",
              len(raw_text), message.usage.input_tokens, message.usage.output_tokens)
 
-    # Strip any accidental markdown fences
+    # Strip any accidental markdown fences and extract JSON
     clean = raw_text.strip()
-    if clean.startswith("```"):
-        clean = clean.split("```")[1]
-        if clean.startswith("json"):
-            clean = clean[4:]
-    clean = clean.strip().rstrip("`").strip()
+    if "```" in clean:
+        parts = clean.split("```")
+        for part in parts:
+            part = part.strip()
+            if part.startswith("json"):
+                part = part[4:].strip()
+            if part.startswith("{"):
+                clean = part
+                break
+    # Find the first { and last } to extract just the JSON object
+    start = clean.find("{")
+    end = clean.rfind("}")
+    if start != -1 and end != -1:
+        clean = clean[start:end+1]
 
     return json.loads(clean)
 
