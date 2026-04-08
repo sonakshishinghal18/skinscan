@@ -3,206 +3,437 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LUMIS</title>
+<title>LUMIS — Skin Analysis</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,400;1,500&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --bg:    #0A0A0A;
-  --bg2:   #111111;
-  --bg3:   #181818;
-  --border:  rgba(255,255,255,0.07);
-  --border2: rgba(255,255,255,0.13);
-  --text:  #EFEFEF;
-  --text2: #777;
-  --text3: #3A3A3A;
-  --green:  #3DDB7A;
-  --yellow: #F5C842;
-  --red:    #F0503A;
-  --white:  #FFFFFF;
+  --bg:       #FAFAF8;
+  --bg2:      #F4F2EE;
+  --bg3:      #EDEAE4;
+  --ink:      #181614;
+  --ink2:     #3D3A36;
+  --ink3:     #7A766E;
+  --ink4:     #B5B0A6;
+  --border:   #E2DED7;
+  --border2:  #CBC6BE;
+  --white:    #FFFFFF;
+  --green:    #1A7A42;
+  --green-bg: #EAF5EF;
+  --yellow:   #8A6A00;
+  --yellow-bg:#FDF6E3;
+  --red:      #B52A1C;
+  --red-bg:   #FDECEA;
+  --accent:   #2C2C2C;
 }
 
-html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; overflow-x: hidden; }
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Outfit', sans-serif;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
 
 .screen { display: none; min-height: 100vh; flex-direction: column; }
 .screen.active { display: flex; }
 
-/* NAV */
+/* ── NAV ── */
 nav {
   display: flex; align-items: center; justify-content: space-between;
-  padding: 20px 36px; border-bottom: 1px solid var(--border);
-  position: sticky; top: 0; z-index: 10; background: var(--bg);
+  padding: 22px 48px;
+  border-bottom: 1px solid var(--border);
+  background: var(--white);
+  position: sticky; top: 0; z-index: 50;
 }
-.logo { font-size: 16px; font-weight: 700; letter-spacing: 0.22em; color: var(--white); }
-.nav-tag { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text3); letter-spacing: 0.1em; }
+.logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 22px; font-weight: 700; letter-spacing: 0.12em;
+  color: var(--ink); text-transform: uppercase;
+}
+.nav-label {
+  font-size: 13px; font-weight: 500; color: var(--ink3);
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
 
-/* BUTTONS */
-.btn {
-  font-family: 'Syne', sans-serif; font-size: 13px; font-weight: 600;
-  letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;
-  border: 1px solid var(--border2); background: transparent; color: var(--text);
-  padding: 15px 32px; transition: all 0.18s;
+/* ── BUTTONS ── */
+.btn-primary {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--ink); color: var(--white);
+  font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 16px 40px; border: none; cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
 }
-.btn:hover { background: var(--bg3); border-color: rgba(255,255,255,0.22); }
-.btn-fill { background: var(--white); color: var(--bg); border-color: var(--white); }
-.btn-fill:hover { background: #E0E0E0; border-color: #E0E0E0; color: var(--bg); }
-.btn-ghost { border: none; background: none; color: var(--text2); font-size: 13px; padding: 8px 0; cursor: pointer; font-family: 'Syne', sans-serif; letter-spacing: 0.1em; transition: color 0.15s; }
-.btn-ghost:hover { color: var(--white); }
+.btn-primary:hover { background: var(--ink2); }
+.btn-primary:active { transform: scale(0.98); }
+
+.btn-outline {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: transparent; color: var(--ink2);
+  font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 15px 40px; border: 1.5px solid var(--border2); cursor: pointer;
+  transition: all 0.2s;
+}
+.btn-outline:hover { border-color: var(--ink); color: var(--ink); background: var(--bg2); }
+
+.btn-ghost {
+  background: none; border: none; cursor: pointer;
+  font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 500;
+  color: var(--ink3); letter-spacing: 0.04em;
+  transition: color 0.2s; padding: 6px 0;
+}
+.btn-ghost:hover { color: var(--ink); }
+
+.btn-sm {
+  font-size: 13px; padding: 12px 28px; font-weight: 600;
+  letter-spacing: 0.08em;
+}
 
 /* ── HOME ── */
-.home-wrap { flex: 1; display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 61px); }
-.home-left { display: flex; flex-direction: column; justify-content: center; padding: 80px 64px; border-right: 1px solid var(--border); }
-.home-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text3); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 28px; }
-.home-title { font-size: 68px; font-weight: 700; line-height: 1.0; color: var(--white); margin-bottom: 20px; letter-spacing: -0.02em; }
-.home-title .dim { color: var(--text3); font-weight: 400; }
-.home-desc { font-size: 17px; color: var(--text2); line-height: 1.75; max-width: 360px; margin-bottom: 48px; }
-.home-right { display: flex; align-items: center; justify-content: center; padding: 48px; background: var(--bg2); }
+.home-grid {
+  flex: 1; display: grid; grid-template-columns: 1fr 1fr;
+  min-height: calc(100vh - 69px);
+}
+.home-left {
+  display: flex; flex-direction: column; justify-content: center;
+  padding: 80px 64px;
+  border-right: 1px solid var(--border);
+  background: var(--white);
+}
+.home-eyebrow {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--ink3); margin-bottom: 24px;
+}
+.home-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 72px; font-weight: 700; line-height: 1.0;
+  color: var(--ink); margin-bottom: 24px; letter-spacing: -0.01em;
+}
+.home-title em { font-style: italic; color: var(--ink3); }
+.home-desc {
+  font-size: 18px; font-weight: 400; line-height: 1.7;
+  color: var(--ink2); max-width: 400px; margin-bottom: 48px;
+}
+.home-right {
+  display: flex; align-items: center; justify-content: center;
+  padding: 60px; background: var(--bg2);
+}
 
-/* Sample preview */
-.preview-card { width: 100%; max-width: 320px; }
-.prev-top { display: flex; align-items: baseline; gap: 14px; padding-bottom: 24px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
-.prev-num { font-family: 'IBM Plex Mono', monospace; font-size: 64px; font-weight: 400; color: var(--green); line-height: 1; }
-.prev-label { font-size: 14px; color: var(--text2); letter-spacing: 0.05em; }
-.prev-params { display: flex; flex-direction: column; }
-.prev-param { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
-.prev-param:last-child { border-bottom: none; }
-.prev-name { font-size: 13px; color: var(--text2); width: 135px; flex-shrink: 0; }
-.prev-bar { flex: 1; height: 1px; background: var(--border2); position: relative; }
-.prev-fill { position: absolute; left: 0; top: 0; height: 1px; }
-.prev-score { font-family: 'IBM Plex Mono', monospace; font-size: 15px; width: 34px; text-align: right; flex-shrink: 0; }
-.c-green { color: var(--green); }
+/* Sample score card */
+.sample-card {
+  width: 100%; max-width: 360px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+.sample-hero {
+  background: var(--ink); padding: 32px 28px;
+  display: flex; align-items: flex-end; justify-content: space-between;
+}
+.sample-score-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 80px; font-weight: 700; line-height: 1;
+  color: #FFFFFF;
+}
+.sample-score-meta { text-align: right; }
+.sample-score-label { font-size: 11px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 6px; }
+.sample-score-verdict { font-size: 16px; font-weight: 500; color: rgba(255,255,255,0.8); }
+.sample-params { padding: 8px 0; }
+.sp-row {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 24px; border-bottom: 1px solid var(--border);
+}
+.sp-row:last-child { border-bottom: none; }
+.sp-name { font-size: 14px; font-weight: 500; color: var(--ink2); flex: 1; }
+.sp-track { width: 72px; height: 3px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.sp-fill { height: 100%; border-radius: 2px; }
+.sp-val { font-size: 16px; font-weight: 600; width: 36px; text-align: right; }
+.c-green  { color: var(--green); }
 .c-yellow { color: var(--yellow); }
-.c-red { color: var(--red); }
-.bg-green { background: var(--green); }
+.c-red    { color: var(--red); }
+.bg-green  { background: var(--green); }
 .bg-yellow { background: var(--yellow); }
-.bg-red { background: var(--red); }
+.bg-red    { background: var(--red); }
 
 /* ── CAMERA ── */
-.cam-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000; padding: 32px; }
-.vid-wrap { position: relative; width: 100%; max-width: 440px; }
-#video { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; transform: scaleX(-1); }
-.corner { position: absolute; width: 18px; height: 18px; }
-.tl { top:0; left:0; border-top: 1px solid rgba(255,255,255,0.35); border-left: 1px solid rgba(255,255,255,0.35); }
-.tr { top:0; right:0; border-top: 1px solid rgba(255,255,255,0.35); border-right: 1px solid rgba(255,255,255,0.35); }
-.bl { bottom:0; left:0; border-bottom: 1px solid rgba(255,255,255,0.35); border-left: 1px solid rgba(255,255,255,0.35); }
-.br { bottom:0; right:0; border-bottom: 1px solid rgba(255,255,255,0.35); border-right: 1px solid rgba(255,255,255,0.35); }
-.cam-hint { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: rgba(255,255,255,0.2); text-align: center; margin-top: 14px; letter-spacing: 0.1em; }
-.shutter-row { margin-top: 28px; display: flex; justify-content: center; }
-.shutter { width: 58px; height: 58px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.25); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
-.shutter::after { content: ''; width: 44px; height: 44px; border-radius: 50%; background: var(--white); transition: all 0.15s; }
-.shutter:hover::after { width: 38px; height: 38px; background: #ccc; }
-.shutter:active::after { width: 32px; height: 32px; }
+.cam-wrap {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: #111; padding: 40px;
+}
+.vid-outer { position: relative; width: 100%; max-width: 460px; }
+#video {
+  width: 100%; aspect-ratio: 3/4; object-fit: cover;
+  display: block; transform: scaleX(-1);
+}
+.corner { position: absolute; width: 22px; height: 22px; }
+.tl { top: 0; left: 0;    border-top: 2px solid rgba(255,255,255,0.5); border-left: 2px solid rgba(255,255,255,0.5); }
+.tr { top: 0; right: 0;   border-top: 2px solid rgba(255,255,255,0.5); border-right: 2px solid rgba(255,255,255,0.5); }
+.bl { bottom: 0; left: 0; border-bottom: 2px solid rgba(255,255,255,0.5); border-left: 2px solid rgba(255,255,255,0.5); }
+.br { bottom: 0; right: 0;border-bottom: 2px solid rgba(255,255,255,0.5); border-right: 2px solid rgba(255,255,255,0.5); }
+.cam-hint {
+  font-size: 13px; font-weight: 400; color: rgba(255,255,255,0.45);
+  text-align: center; margin-top: 18px; letter-spacing: 0.04em;
+}
+.shutter-row { display: flex; justify-content: center; margin-top: 32px; }
+.shutter {
+  width: 68px; height: 68px; border-radius: 50%;
+  border: 2.5px solid rgba(255,255,255,0.4); background: transparent;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.shutter::after {
+  content: ''; width: 52px; height: 52px; border-radius: 50%;
+  background: white; transition: all 0.15s;
+}
+.shutter:hover::after { width: 46px; height: 46px; background: #ddd; }
+.shutter:active::after { width: 38px; height: 38px; }
 #canvas { display: none; }
 
 /* ── PREVIEW ── */
-.prev-wrap { flex: 1; display: grid; grid-template-columns: 1fr 380px; min-height: calc(100vh - 61px); }
-.prev-img { background: #000; display: flex; align-items: center; justify-content: center; padding: 40px; }
-#preview-image { max-height: 72vh; width: 100%; max-width: 360px; object-fit: cover; display: block; }
-.prev-side { padding: 56px 40px; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid var(--border); }
-.side-tag { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text3); letter-spacing: 0.15em; margin-bottom: 20px; }
-.side-title { font-size: 40px; font-weight: 700; color: var(--white); margin-bottom: 14px; line-height: 1.1; }
-.side-desc { font-size: 15px; color: var(--text2); line-height: 1.7; margin-bottom: 32px; }
-.checklist { margin-bottom: 32px; display: flex; flex-direction: column; gap: 8px; }
-.chk { display: flex; align-items: center; gap: 10px; font-size: 15px; color: var(--text2); }
-.chk-line { width: 10px; height: 1px; background: var(--text3); flex-shrink: 0; }
-.btn-col { display: flex; flex-direction: column; gap: 8px; }
+.preview-grid {
+  flex: 1; display: grid; grid-template-columns: 1fr 440px;
+  min-height: calc(100vh - 69px);
+}
+.preview-img-col {
+  background: #1A1A1A; display: flex;
+  align-items: center; justify-content: center; padding: 48px;
+}
+#preview-image {
+  max-height: 74vh; width: 100%; max-width: 400px; object-fit: cover; display: block;
+}
+.preview-info-col {
+  padding: 64px 52px; display: flex; flex-direction: column;
+  justify-content: center; background: var(--white);
+  border-left: 1px solid var(--border);
+}
+.col-eyebrow {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--ink3); margin-bottom: 20px;
+}
+.col-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 44px; font-weight: 700; line-height: 1.1;
+  color: var(--ink); margin-bottom: 18px;
+}
+.col-desc {
+  font-size: 16px; font-weight: 400; line-height: 1.75;
+  color: var(--ink2); margin-bottom: 36px;
+}
+.checklist { display: flex; flex-direction: column; gap: 12px; margin-bottom: 40px; }
+.chk-row { display: flex; align-items: center; gap: 12px; }
+.chk-mark {
+  width: 20px; height: 20px; border-radius: 50%;
+  border: 1.5px solid var(--border2); flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.chk-mark::after { content: '✓'; font-size: 11px; color: var(--ink3); }
+.chk-text { font-size: 15px; font-weight: 400; color: var(--ink2); }
+.btn-stack { display: flex; flex-direction: column; gap: 12px; }
 
-/* ── SCANNING ── */
-.scan-wrap { flex: 1; display: grid; grid-template-columns: 1fr 380px; min-height: calc(100vh - 61px); }
-.scan-img { background: #000; display: flex; align-items: center; justify-content: center; padding: 40px; position: relative; overflow: hidden; }
-#scan-image { max-height: 72vh; width: 100%; max-width: 360px; object-fit: cover; display: block; filter: brightness(0.45); position: relative; z-index: 1; }
-.scan-beam { position: absolute; left: 40px; right: 40px; height: 1px; z-index: 2; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent); animation: beam 2s ease-in-out infinite; }
-@keyframes beam { 0%,100%{top:40px} 50%{top:calc(100% - 40px)} }
-.scan-side { padding: 56px 40px; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid var(--border); background: var(--bg2); }
-.scan-tag { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text3); letter-spacing: 0.15em; margin-bottom: 20px; }
-.scan-title { font-size: 34px; font-weight: 700; color: var(--white); line-height: 1.15; margin-bottom: 36px; }
-.steps { display: flex; flex-direction: column; }
-.step { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); opacity: 0.2; transition: opacity 0.4s; }
-.step:last-child { border-bottom: none; }
-.step.active { opacity: 1; }
-.step.done { opacity: 0.35; }
-.step-n { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text3); width: 18px; flex-shrink: 0; }
-.step.active .step-n { color: var(--white); }
-.step-l { font-size: 15px; color: var(--text2); }
-.step.active .step-l { color: var(--white); }
-.scan-pulse { margin-top: 28px; display: flex; align-items: center; gap: 10px; }
-.pulse-d { width: 4px; height: 4px; border-radius: 50%; background: var(--white); animation: pd 1.4s ease-in-out infinite; }
-@keyframes pd { 0%,100%{opacity:1} 50%{opacity:0.2} }
-.pulse-t { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text3); }
-
-/* ── RESULTS ── */
-.res-top { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
-.score-panel { padding: 64px; display: flex; flex-direction: column; justify-content: center; border-right: 1px solid var(--border); }
-.score-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text3); letter-spacing: 0.15em; margin-bottom: 16px; }
-.score-num { font-family: 'IBM Plex Mono', monospace; font-size: 100px; font-weight: 400; line-height: 1; margin-bottom: 10px; transition: color 0.6s; }
-.score-verd { font-size: 22px; font-weight: 600; color: var(--white); margin-bottom: 8px; }
-.score-tag { font-size: 16px; color: var(--text2); line-height: 1.6; max-width: 300px; }
-
-.params-panel { padding: 48px 52px; display: flex; flex-direction: column; justify-content: center; }
-.params-hd { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text3); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 20px; }
-.p-row { display: flex; align-items: center; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--border); }
-.p-row:last-child { border-bottom: none; }
-.p-name { font-size: 14px; color: var(--text2); width: 120px; flex-shrink: 0; letter-spacing: 0.02em; }
-.p-track { flex: 1; height: 1px; background: var(--border2); position: relative; }
-.p-fill { position: absolute; left: 0; top: -1px; height: 3px; border-radius: 2px; transition: width 1.4s cubic-bezier(0.4,0,0.2,1); }
-.p-val { font-family: 'IBM Plex Mono', monospace; font-size: 19px; width: 30px; text-align: right; flex-shrink: 0; transition: color 0.5s; }
-
-/* TIPS */
-.tips-wrap { padding: 60px; border-top: 1px solid var(--border); }
-.tips-hd { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 36px; }
-.tips-ttl { font-size: 32px; font-weight: 700; color: var(--white); }
-.tips-ct { font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: var(--text3); letter-spacing: 0.1em; }
-.tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
-.tip { background: var(--bg); padding: 28px 26px; transition: background 0.18s; }
-.tip:hover { background: var(--bg2); }
-.tip-pri { font-family: 'IBM Plex Mono', monospace; font-size: 12px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px; }
-.tip-pri.high { color: var(--red); }
-.tip-pri.medium { color: var(--yellow); }
-.tip-pri.low { color: var(--green); }
-.tip-ttl { font-size: 21px; font-weight: 600; color: var(--white); margin-bottom: 8px; line-height: 1.2; }
-.tip-body { font-size: 15px; color: var(--text2); line-height: 1.75; }
-
-/* FOOTER */
-.res-footer { padding: 24px 60px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-.foot-note { font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: var(--text3); }
-
-/* FACE ERROR BANNER */
+/* Face error banner */
 #face-error {
-  display: none; background: rgba(240,80,58,0.1); border: 1px solid rgba(240,80,58,0.3);
-  color: var(--red); padding: 14px 18px; font-size: 14px; line-height: 1.6;
-  margin-bottom: 20px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.02em;
+  display: none;
+  background: var(--red-bg); border: 1.5px solid var(--red);
+  border-radius: 2px; padding: 16px 20px;
+  font-size: 15px; font-weight: 500; color: var(--red);
+  line-height: 1.6; margin-bottom: 24px;
 }
 
-/* TOAST */
-#toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(56px); background: var(--bg3); border: 1px solid var(--border2); color: var(--text); padding: 11px 22px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; z-index: 200; transition: transform 0.3s; white-space: nowrap; pointer-events: none; }
+/* ── SCANNING ── */
+.scan-grid {
+  flex: 1; display: grid; grid-template-columns: 1fr 440px;
+  min-height: calc(100vh - 69px);
+}
+.scan-img-col {
+  background: #1A1A1A; display: flex;
+  align-items: center; justify-content: center; padding: 48px;
+  position: relative; overflow: hidden;
+}
+#scan-image {
+  max-height: 74vh; width: 100%; max-width: 400px; object-fit: cover;
+  display: block; filter: brightness(0.5) contrast(1.1);
+  position: relative; z-index: 1;
+}
+.scan-beam {
+  position: absolute; left: 48px; right: 48px; height: 1px; z-index: 2;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.7), transparent);
+  animation: beam 2.2s ease-in-out infinite;
+}
+@keyframes beam { 0%,100%{ top: 48px } 50%{ top: calc(100% - 48px) } }
+.scan-info-col {
+  padding: 64px 52px; display: flex; flex-direction: column;
+  justify-content: center; background: var(--white);
+  border-left: 1px solid var(--border);
+}
+.scan-steps { display: flex; flex-direction: column; margin-top: 32px; }
+.step-row {
+  display: flex; align-items: center; gap: 18px;
+  padding: 16px 0; border-bottom: 1px solid var(--border);
+  opacity: 0.3; transition: opacity 0.4s, transform 0.3s;
+  transform: translateX(-6px);
+}
+.step-row:last-child { border-bottom: none; }
+.step-row.active { opacity: 1; transform: translateX(0); }
+.step-row.done { opacity: 0.45; transform: translateX(0); }
+.step-num {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.1em;
+  color: var(--ink4); width: 22px; flex-shrink: 0;
+}
+.step-row.active .step-num { color: var(--ink); }
+.step-label { font-size: 16px; font-weight: 400; color: var(--ink3); }
+.step-row.active .step-label { font-weight: 600; color: var(--ink); }
+.scan-ticker {
+  display: flex; align-items: center; gap: 12px; margin-top: 32px;
+}
+.ticker-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--ink); animation: pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.3;transform:scale(0.5)} }
+.ticker-text { font-size: 14px; font-weight: 400; color: var(--ink3); }
+
+/* ── RESULTS ── */
+.results-hero {
+  display: grid; grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--border);
+}
+.score-col {
+  padding: 72px 64px; display: flex; flex-direction: column;
+  justify-content: center; background: var(--ink);
+  border-right: 1px solid rgba(255,255,255,0.08);
+}
+.score-eyebrow {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 16px;
+}
+.score-number {
+  font-family: 'Playfair Display', serif;
+  font-size: 120px; font-weight: 700; line-height: 1;
+  margin-bottom: 12px; transition: color 0.6s;
+}
+.score-verdict-text {
+  font-size: 24px; font-weight: 600; color: rgba(255,255,255,0.9);
+  margin-bottom: 12px;
+}
+.score-tagline-text {
+  font-size: 16px; font-weight: 300; color: rgba(255,255,255,0.5);
+  line-height: 1.6; max-width: 320px;
+  font-family: 'Playfair Display', serif; font-style: italic;
+}
+
+.params-col {
+  padding: 56px 56px; display: flex; flex-direction: column;
+  justify-content: center; background: var(--white);
+}
+.params-eyebrow {
+  font-size: 12px; font-weight: 600; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--ink3); margin-bottom: 24px;
+}
+.param-item {
+  display: flex; align-items: center; gap: 18px;
+  padding: 18px 0; border-bottom: 1px solid var(--border);
+}
+.param-item:last-child { border-bottom: none; }
+.param-name-text { font-size: 15px; font-weight: 500; color: var(--ink2); width: 150px; flex-shrink: 0; }
+.param-track-bar { flex: 1; height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; }
+.param-bar-fill { height: 100%; border-radius: 2px; transition: width 1.5s cubic-bezier(0.4,0,0.2,1); }
+.param-score-val { font-size: 22px; font-weight: 700; width: 44px; text-align: right; flex-shrink: 0; }
+
+/* ── TIPS ── */
+.tips-section {
+  padding: 72px 64px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+.tips-header {
+  display: flex; align-items: baseline; justify-content: space-between;
+  margin-bottom: 48px;
+}
+.tips-heading {
+  font-family: 'Playfair Display', serif;
+  font-size: 48px; font-weight: 700; color: var(--ink);
+}
+.tips-subcount {
+  font-size: 14px; font-weight: 500; color: var(--ink3);
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.tip-card {
+  background: var(--white); border: 1px solid var(--border);
+  padding: 36px 32px; transition: border-color 0.2s, transform 0.2s;
+}
+.tip-card:hover { border-color: var(--border2); transform: translateY(-2px); }
+.tip-priority-badge {
+  display: inline-block;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; padding: 5px 12px;
+  margin-bottom: 18px; border-radius: 2px;
+}
+.pri-high   { background: var(--red-bg);    color: var(--red); }
+.pri-medium { background: var(--yellow-bg); color: var(--yellow); }
+.pri-low    { background: var(--green-bg);  color: var(--green); }
+.tip-title-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px; font-weight: 500; color: var(--ink);
+  margin-bottom: 12px; line-height: 1.25;
+}
+.tip-body-text {
+  font-size: 15px; font-weight: 400; color: var(--ink2); line-height: 1.8;
+}
+
+/* ── FOOTER ── */
+.results-footer {
+  padding: 28px 64px; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--white);
+}
+.footer-note { font-size: 13px; font-weight: 400; color: var(--ink4); }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 28px; left: 50%;
+  transform: translateX(-50%) translateY(64px);
+  background: var(--ink); color: var(--white);
+  padding: 14px 28px; font-size: 14px; font-weight: 400;
+  z-index: 500; transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  white-space: nowrap; pointer-events: none; letter-spacing: 0.02em;
+}
 #toast.show { transform: translateX(-50%) translateY(0); }
 
-/* ANIM */
-@keyframes fu { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
-.fu  { animation: fu 0.45s ease both; }
-.fu1 { animation: fu 0.45s 0.07s ease both; }
-.fu2 { animation: fu 0.45s 0.14s ease both; }
-.fu3 { animation: fu 0.45s 0.21s ease both; }
+/* ── FADE IN ── */
+@keyframes fadeUp { from { opacity:0; transform: translateY(18px) } to { opacity:1; transform: translateY(0) } }
+.fu  { animation: fadeUp 0.55s ease both; }
+.fu1 { animation: fadeUp 0.55s 0.08s ease both; }
+.fu2 { animation: fadeUp 0.55s 0.16s ease both; }
+.fu3 { animation: fadeUp 0.55s 0.24s ease both; }
 
-/* RESPONSIVE */
-@media (max-width: 840px) {
-  nav { padding: 16px 20px; }
-  .home-wrap { grid-template-columns: 1fr; }
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  nav { padding: 18px 24px; }
+  .home-grid { grid-template-columns: 1fr; }
   .home-right { display: none; }
-  .home-left { padding: 48px 24px; }
-  .home-title { font-size: 42px; }
-  .prev-wrap, .scan-wrap { grid-template-columns: 1fr; }
-  .prev-img, .scan-img { min-height: 40vh; padding: 20px; }
-  .prev-side, .scan-side { padding: 32px 20px; }
-  .res-top { grid-template-columns: 1fr; }
-  .score-panel { padding: 40px 24px; border-right: none; border-bottom: 1px solid var(--border); }
-  .score-num { font-size: 72px; }
-  .params-panel { padding: 32px 24px; }
-  .tips-wrap { padding: 40px 24px; }
+  .home-left { padding: 56px 28px; }
+  .home-title { font-size: 52px; }
+  .home-desc { font-size: 16px; }
+  .preview-grid, .scan-grid { grid-template-columns: 1fr; }
+  .preview-img-col, .scan-img-col { min-height: 42vh; padding: 24px; }
+  .preview-info-col, .scan-info-col { padding: 40px 28px; }
+  .col-title { font-size: 36px; }
+  .results-hero { grid-template-columns: 1fr; }
+  .score-col { padding: 48px 28px; }
+  .score-number { font-size: 88px; }
+  .params-col { padding: 40px 28px; }
+  .tips-section { padding: 48px 28px; }
   .tips-grid { grid-template-columns: 1fr; }
-  .res-footer { padding: 20px 24px; flex-direction: column; gap: 12px; text-align: center; }
+  .tips-heading { font-size: 36px; }
+  .tips-header { flex-direction: column; gap: 8px; }
+  .results-footer { padding: 24px 28px; flex-direction: column; gap: 14px; text-align: center; }
 }
 </style>
 </head>
@@ -210,50 +441,55 @@ nav {
 
 <div id="toast"></div>
 
-<!-- ══ HOME ══ -->
+<!-- ══════ HOME ══════ -->
 <div id="screen-home" class="screen active">
   <nav>
-    <div class="logo">LUMIS</div>
-    <div class="nav-tag">Skin Analysis</div>
+    <div class="logo">Lumis</div>
+    <div class="nav-label">Skin Analysis</div>
   </nav>
-  <div class="home-wrap">
+  <div class="home-grid">
     <div class="home-left">
       <div class="home-eyebrow fu">Dermal Analysis</div>
-      <div class="home-title fu1">Know your<br><span class="dim">skin.</span></div>
-      <p class="home-desc fu2">Take a selfie. Get a score across five skin areas with clear tips on what to fix.</p>
-      <div class="fu3"><button class="btn btn-fill" onclick="startCamera()">Begin Scan</button></div>
+      <div class="home-title fu1">Know your<br><em>skin.</em></div>
+      <p class="home-desc fu2">Take a selfie. Get a full skin score across five areas with clear tips on exactly what to fix.</p>
+      <div class="fu3">
+        <button class="btn-primary" onclick="startCamera()">Begin Scan</button>
+      </div>
     </div>
     <div class="home-right">
-      <div class="preview-card">
-        <div class="prev-top">
-          <div class="prev-num">8.4</div>
-          <div class="prev-label">Overall Score</div>
+      <div class="sample-card">
+        <div class="sample-hero">
+          <div class="sample-score-num">8.4</div>
+          <div class="sample-score-meta">
+            <div class="sample-score-label">Overall Score</div>
+            <div class="sample-score-verdict">Very Good</div>
+          </div>
         </div>
-        <div class="prev-params">
-          <div class="prev-param">
-            <span class="prev-name">Acne &amp; Blemishes</span>
-            <div class="prev-bar"><div class="prev-fill bg-green" style="width:80%"></div></div>
-            <span class="prev-score c-green">8.0</span>
+        <div class="sample-params">
+          <div class="sp-row">
+            <span class="sp-name">Acne &amp; Blemishes</span>
+            <div class="sp-track"><div class="sp-fill bg-green" style="width:80%"></div></div>
+            <span class="sp-val c-green">8.0</span>
           </div>
-          <div class="prev-param">
-            <span class="prev-name">Hydration</span>
-            <div class="prev-bar"><div class="prev-fill bg-green" style="width:85%"></div></div>
-            <span class="prev-score c-green">8.5</span>
+          <div class="sp-row">
+            <span class="sp-name">Hydration</span>
+            <div class="sp-track"><div class="sp-fill bg-green" style="width:85%"></div></div>
+            <span class="sp-val c-green">8.5</span>
           </div>
-          <div class="prev-param">
-            <span class="prev-name">Redness &amp; Tone</span>
-            <div class="prev-bar"><div class="prev-fill bg-yellow" style="width:60%"></div></div>
-            <span class="prev-score c-yellow">6.0</span>
+          <div class="sp-row">
+            <span class="sp-name">Redness &amp; Tone</span>
+            <div class="sp-track"><div class="sp-fill bg-yellow" style="width:62%"></div></div>
+            <span class="sp-val c-yellow">6.2</span>
           </div>
-          <div class="prev-param">
-            <span class="prev-name">Texture &amp; Pores</span>
-            <div class="prev-bar"><div class="prev-fill bg-red" style="width:45%"></div></div>
-            <span class="prev-score c-red">4.5</span>
+          <div class="sp-row">
+            <span class="sp-name">Texture &amp; Pores</span>
+            <div class="sp-track"><div class="sp-fill bg-red" style="width:42%"></div></div>
+            <span class="sp-val c-red">4.2</span>
           </div>
-          <div class="prev-param">
-            <span class="prev-name">Dark Spots</span>
-            <div class="prev-bar"><div class="prev-fill bg-green" style="width:90%"></div></div>
-            <span class="prev-score c-green">9.0</span>
+          <div class="sp-row">
+            <span class="sp-name">Dark Spots</span>
+            <div class="sp-track"><div class="sp-fill bg-green" style="width:90%"></div></div>
+            <span class="sp-val c-green">9.0</span>
           </div>
         </div>
       </div>
@@ -261,114 +497,114 @@ nav {
   </div>
 </div>
 
-<!-- ══ CAMERA ══ -->
+<!-- ══════ CAMERA ══════ -->
 <div id="screen-camera" class="screen">
   <nav>
-    <div class="logo">LUMIS</div>
+    <div class="logo">Lumis</div>
     <button class="btn-ghost" onclick="stopCamera()">← Back</button>
   </nav>
-  <div class="cam-body">
-    <div class="vid-wrap">
+  <div class="cam-wrap">
+    <div class="vid-outer">
       <video id="video" autoplay playsinline muted></video>
       <div class="corner tl"></div><div class="corner tr"></div>
       <div class="corner bl"></div><div class="corner br"></div>
     </div>
     <canvas id="canvas"></canvas>
-    <div class="cam-hint">face centred · zoom in close · good lighting · no filter</div>
+    <div class="cam-hint">Face centred · Zoom in close · Good lighting · No filter</div>
     <div class="shutter-row">
-      <button class="shutter" onclick="capturePhoto()" title="Capture"></button>
+      <button class="shutter" onclick="capturePhoto()" title="Capture selfie"></button>
     </div>
   </div>
 </div>
 
-<!-- ══ PREVIEW ══ -->
+<!-- ══════ PREVIEW ══════ -->
 <div id="screen-preview" class="screen">
   <nav>
-    <div class="logo">LUMIS</div>
-    <div class="nav-tag">Confirm</div>
+    <div class="logo">Lumis</div>
+    <div class="nav-label">Confirm Photo</div>
   </nav>
-  <div class="prev-wrap">
-    <div class="prev-img">
-      <img id="preview-image" alt="Preview" />
+  <div class="preview-grid">
+    <div class="preview-img-col">
+      <img id="preview-image" alt="Your selfie" />
     </div>
-    <div class="prev-side">
-      <div class="side-tag">Ready</div>
+    <div class="preview-info-col">
+      <div class="col-eyebrow">Ready to Analyse</div>
       <div id="face-error"></div>
-      <div class="side-title">Looks good?</div>
-      <p class="side-desc">Face clear, well-lit, and in focus for accurate results.</p>
+      <div class="col-title">Looks good?</div>
+      <p class="col-desc">Make sure your face is clearly visible, well-lit, and in sharp focus for the most accurate results.</p>
       <div class="checklist">
-        <div class="chk"><div class="chk-line"></div>Face clearly visible</div>
-        <div class="chk"><div class="chk-line"></div>Natural lighting</div>
-        <div class="chk"><div class="chk-line"></div>Minimal makeup</div>
-        <div class="chk"><div class="chk-line"></div>Sharp and in focus</div>
+        <div class="chk-row"><div class="chk-mark"></div><span class="chk-text">Face clearly visible and centred</span></div>
+        <div class="chk-row"><div class="chk-mark"></div><span class="chk-text">Good natural lighting</span></div>
+        <div class="chk-row"><div class="chk-mark"></div><span class="chk-text">Minimal makeup</span></div>
+        <div class="chk-row"><div class="chk-mark"></div><span class="chk-text">Photo is sharp and in focus</span></div>
       </div>
-      <div class="btn-col">
-        <button class="btn btn-fill" onclick="startAnalysis()">Analyse Skin</button>
-        <button class="btn" onclick="retake()">Retake</button>
+      <div class="btn-stack">
+        <button class="btn-primary" onclick="startAnalysis()">Analyse My Skin</button>
+        <button class="btn-outline" onclick="retake()">Retake Photo</button>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ SCANNING ══ -->
+<!-- ══════ SCANNING ══════ -->
 <div id="screen-scanning" class="screen">
   <nav>
-    <div class="logo">LUMIS</div>
-    <div class="nav-tag">Processing</div>
+    <div class="logo">Lumis</div>
+    <div class="nav-label">Analysing</div>
   </nav>
-  <div class="scan-wrap">
-    <div class="scan-img">
+  <div class="scan-grid">
+    <div class="scan-img-col">
       <div class="scan-beam"></div>
-      <img id="scan-image" alt="Scan" />
+      <img id="scan-image" alt="Scanning" />
     </div>
-    <div class="scan-side">
-      <div class="scan-tag">Analysing</div>
-      <div class="scan-title">Reading your<br>skin profile</div>
-      <div class="steps" id="scan-steps">
-        <div class="step" data-i="0"><span class="step-n">01</span><span class="step-l">Detecting facial regions</span></div>
-        <div class="step" data-i="1"><span class="step-n">02</span><span class="step-l">Mapping pore structure</span></div>
-        <div class="step" data-i="2"><span class="step-n">03</span><span class="step-l">Analysing tone &amp; redness</span></div>
-        <div class="step" data-i="3"><span class="step-n">04</span><span class="step-l">Scoring hydration</span></div>
-        <div class="step" data-i="4"><span class="step-n">05</span><span class="step-l">Identifying blemishes</span></div>
-        <div class="step" data-i="5"><span class="step-n">06</span><span class="step-l">Generating report</span></div>
+    <div class="scan-info-col">
+      <div class="col-eyebrow">Processing</div>
+      <div class="col-title" style="font-family:'Playfair Display',serif;font-size:40px;">Reading your<br>skin profile</div>
+      <div class="scan-steps" id="scan-steps">
+        <div class="step-row"><span class="step-num">01</span><span class="step-label">Detecting facial regions</span></div>
+        <div class="step-row"><span class="step-num">02</span><span class="step-label">Mapping pore structure</span></div>
+        <div class="step-row"><span class="step-num">03</span><span class="step-label">Analysing tone &amp; redness</span></div>
+        <div class="step-row"><span class="step-num">04</span><span class="step-label">Scoring hydration</span></div>
+        <div class="step-row"><span class="step-num">05</span><span class="step-label">Identifying blemishes</span></div>
+        <div class="step-row"><span class="step-num">06</span><span class="step-label">Generating report</span></div>
       </div>
-      <div class="scan-pulse">
-        <div class="pulse-d"></div>
-        <div class="pulse-t" id="scan-status">Initialising…</div>
+      <div class="scan-ticker">
+        <div class="ticker-dot"></div>
+        <div class="ticker-text" id="scan-status">Initialising…</div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ══ RESULTS ══ -->
+<!-- ══════ RESULTS ══════ -->
 <div id="screen-results" class="screen">
   <nav>
-    <div class="logo">LUMIS</div>
-    <button class="btn" onclick="restart()" style="font-size:11px;padding:10px 22px;">New Scan</button>
+    <div class="logo">Lumis</div>
+    <button class="btn-outline btn-sm" onclick="restart()">New Scan</button>
   </nav>
   <div>
-    <div class="res-top">
-      <div class="score-panel">
-        <div class="score-lbl">Overall Score</div>
-        <div class="score-num" id="score-num">—</div>
-        <div class="score-verd" id="score-verd"></div>
-        <div class="score-tag" id="score-tag"></div>
+    <div class="results-hero">
+      <div class="score-col">
+        <div class="score-eyebrow">Overall Score</div>
+        <div class="score-number" id="score-number">—</div>
+        <div class="score-verdict-text" id="score-verdict-text"></div>
+        <div class="score-tagline-text" id="score-tagline-text"></div>
       </div>
-      <div class="params-panel">
-        <div class="params-hd">Breakdown</div>
+      <div class="params-col">
+        <div class="params-eyebrow">Score Breakdown</div>
         <div id="params-list"></div>
       </div>
     </div>
-    <div class="tips-wrap">
-      <div class="tips-hd">
-        <div class="tips-ttl">What to do</div>
-        <div class="tips-ct" id="tips-ct"></div>
+    <div class="tips-section">
+      <div class="tips-header">
+        <div class="tips-heading">What to do</div>
+        <div class="tips-subcount" id="tips-subcount"></div>
       </div>
       <div class="tips-grid" id="tips-grid"></div>
     </div>
-    <div class="res-footer">
-      <div class="foot-note">Not a medical diagnosis · For guidance only</div>
-      <button class="btn btn-fill" onclick="restart()">New Scan</button>
+    <div class="results-footer">
+      <div class="footer-note">Not a medical diagnosis · Results are for personal guidance only</div>
+      <button class="btn-primary btn-sm" onclick="restart()">New Scan</button>
     </div>
   </div>
 </div>
@@ -384,21 +620,21 @@ nav {
   }
 
   function showFaceError(msg) {
-    const banner = document.getElementById('face-error');
-    banner.textContent = msg;
-    banner.style.display = 'block';
+    const el = document.getElementById('face-error');
+    el.textContent = msg;
+    el.style.display = 'block';
   }
 
   function toast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg; t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3500);
+    setTimeout(() => t.classList.remove('show'), 4000);
   }
 
-  function scoreColor(s) {
+  function scoreColorClass(s) {
     return s >= 7 ? 'c-green' : s >= 5 ? 'c-yellow' : 'c-red';
   }
-  function scoreBg(s) {
+  function scoreBgClass(s) {
     return s >= 7 ? 'bg-green' : s >= 5 ? 'bg-yellow' : 'bg-red';
   }
 
@@ -406,11 +642,12 @@ nav {
     show('screen-camera');
     try {
       stream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 1600 } }, audio: false
+        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 1600 } },
+        audio: false
       });
       document.getElementById('video').srcObject = stream;
     } catch (e) {
-      toast('Camera access denied.');
+      toast('Camera access denied. Please allow camera permissions and try again.');
       show('screen-home');
     }
   }
@@ -423,7 +660,8 @@ nav {
   function capturePhoto() {
     const v = document.getElementById('video');
     const c = document.getElementById('canvas');
-    c.width = v.videoWidth || 720; c.height = v.videoHeight || 960;
+    c.width = v.videoWidth || 720;
+    c.height = v.videoHeight || 960;
     const ctx = c.getContext('2d');
     ctx.translate(c.width, 0); ctx.scale(-1, 1);
     ctx.drawImage(v, 0, 0);
@@ -439,18 +677,19 @@ nav {
     show('screen-home');
   }
 
-  const STEPS = [
-    'Detecting facial geometry…', 'Mapping skin texture…', 'Analysing tone…',
-    'Scoring hydration…', 'Identifying blemishes…', 'Generating report…'
+  const STEP_LABELS = [
+    'Detecting facial geometry…', 'Mapping skin texture…',
+    'Analysing tone distribution…', 'Scoring hydration levels…',
+    'Identifying active blemishes…', 'Generating skin report…'
   ];
 
   function setStep(i) {
-    document.querySelectorAll('.step').forEach((r, idx) => {
+    document.querySelectorAll('.step-row').forEach((r, idx) => {
       r.classList.remove('active', 'done');
       if (idx < i) r.classList.add('done');
       if (idx === i) r.classList.add('active');
     });
-    document.getElementById('scan-status').textContent = STEPS[i] || 'Finalising…';
+    document.getElementById('scan-status').textContent = STEP_LABELS[i] || 'Finalising…';
   }
 
   async function startAnalysis() {
@@ -471,7 +710,6 @@ nav {
       });
       const data = await res.json();
 
-      // Face validation check
       if (!data.ok && data.face_status) {
         clearInterval(scanTimer);
         const msgs = {
@@ -498,27 +736,29 @@ nav {
     show('screen-results');
   }
 
-  const PRI = { high: 'Fix first', medium: 'Helpful', low: 'Bonus tip' };
+  const PRI_LABEL = { high: 'Fix First', medium: 'Helpful', low: 'Bonus Tip' };
+  const PRI_CLASS = { high: 'pri-high', medium: 'pri-medium', low: 'pri-low' };
 
   function renderResults(r) {
     const s = parseFloat(r.overall);
-    const cl = scoreColor(s);
+    const cc = scoreColorClass(s);
 
-    const sn = document.getElementById('score-num');
+    const sn = document.getElementById('score-number');
     sn.textContent = s.toFixed(1);
-    sn.className = 'score-num ' + cl;
+    sn.className = 'score-number ' + cc;
 
-    document.getElementById('score-verd').textContent = r.verdict || '';
-    document.getElementById('score-tag').textContent = r.tagline || '';
+    document.getElementById('score-verdict-text').textContent = r.verdict || '';
+    document.getElementById('score-tagline-text').textContent = r.tagline || '';
 
     // Params
-    const list = document.getElementById('params-list');
-    list.innerHTML = r.params.map((p, i) => {
+    document.getElementById('params-list').innerHTML = r.params.map((p, i) => {
       const ps = parseFloat(p.score);
-      return `<div class="p-row">
-        <div class="p-name">${p.name}</div>
-        <div class="p-track"><div class="p-fill ${scoreBg(ps)}" id="pf${i}" style="width:0%"></div></div>
-        <div class="p-val ${scoreColor(ps)}">${ps.toFixed(1)}</div>
+      return `<div class="param-item">
+        <div class="param-name-text">${p.name}</div>
+        <div class="param-track-bar">
+          <div class="param-bar-fill ${scoreBgClass(ps)}" id="pf${i}" style="width:0%"></div>
+        </div>
+        <div class="param-score-val ${scoreColorClass(ps)}">${ps.toFixed(1)}</div>
       </div>`;
     }).join('');
     setTimeout(() => {
@@ -528,12 +768,12 @@ nav {
     }, 200);
 
     // Tips
-    document.getElementById('tips-ct').textContent = r.tips.length + ' recommendations';
+    document.getElementById('tips-subcount').textContent = r.tips.length + ' Recommendations';
     document.getElementById('tips-grid').innerHTML = r.tips.map(t => `
-      <div class="tip">
-        <div class="tip-pri ${t.priority}">${PRI[t.priority] || 'Tip'}</div>
-        <div class="tip-ttl">${t.title}</div>
-        <div class="tip-body">${t.body}</div>
+      <div class="tip-card">
+        <span class="tip-priority-badge ${PRI_CLASS[t.priority] || 'pri-low'}">${PRI_LABEL[t.priority] || 'Tip'}</span>
+        <div class="tip-title-text">${t.title}</div>
+        <div class="tip-body-text">${t.body}</div>
       </div>
     `).join('');
   }
