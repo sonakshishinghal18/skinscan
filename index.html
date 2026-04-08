@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMIS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=IBM+Plex+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:    #0A0A0A;
+  --bg2:   #111111;
+  --bg3:   #181818;
+  --border:  rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.13);
+  --text:  #EFEFEF;
+  --text2: #777;
+  --text3: #3A3A3A;
+  --green:  #3DDB7A;
+  --yellow: #F5C842;
+  --red:    #F0503A;
+  --white:  #FFFFFF;
+}
+
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: 'Syne', sans-serif; overflow-x: hidden; }
+
+.screen { display: none; min-height: 100vh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* NAV */
+nav {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 36px; border-bottom: 1px solid var(--border);
+  position: sticky; top: 0; z-index: 10; background: var(--bg);
+}
+.logo { font-size: 14px; font-weight: 700; letter-spacing: 0.22em; color: var(--white); }
+.nav-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text3); letter-spacing: 0.1em; }
+
+/* BUTTONS */
+.btn {
+  font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600;
+  letter-spacing: 0.14em; text-transform: uppercase; cursor: pointer;
+  border: 1px solid var(--border2); background: transparent; color: var(--text);
+  padding: 13px 28px; transition: all 0.18s;
+}
+.btn:hover { background: var(--bg3); border-color: rgba(255,255,255,0.22); }
+.btn-fill { background: var(--white); color: var(--bg); border-color: var(--white); }
+.btn-fill:hover { background: #E0E0E0; border-color: #E0E0E0; color: var(--bg); }
+.btn-ghost { border: none; background: none; color: var(--text2); font-size: 11px; padding: 8px 0; cursor: pointer; font-family: 'Syne', sans-serif; letter-spacing: 0.1em; transition: color 0.15s; }
+.btn-ghost:hover { color: var(--white); }
+
+/* ── HOME ── */
+.home-wrap { flex: 1; display: grid; grid-template-columns: 1fr 1fr; min-height: calc(100vh - 61px); }
+.home-left { display: flex; flex-direction: column; justify-content: center; padding: 80px 64px; border-right: 1px solid var(--border); }
+.home-eyebrow { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text3); letter-spacing: 0.18em; text-transform: uppercase; margin-bottom: 28px; }
+.home-title { font-size: 60px; font-weight: 700; line-height: 1.0; color: var(--white); margin-bottom: 20px; letter-spacing: -0.02em; }
+.home-title .dim { color: var(--text3); font-weight: 400; }
+.home-desc { font-size: 14px; color: var(--text2); line-height: 1.75; max-width: 340px; margin-bottom: 48px; }
+.home-right { display: flex; align-items: center; justify-content: center; padding: 48px; background: var(--bg2); }
+
+/* Sample preview */
+.preview-card { width: 100%; max-width: 320px; }
+.prev-top { display: flex; align-items: baseline; gap: 14px; padding-bottom: 24px; border-bottom: 1px solid var(--border); margin-bottom: 24px; }
+.prev-num { font-family: 'IBM Plex Mono', monospace; font-size: 64px; font-weight: 400; color: var(--green); line-height: 1; }
+.prev-label { font-size: 11px; color: var(--text2); letter-spacing: 0.05em; }
+.prev-params { display: flex; flex-direction: column; }
+.prev-param { display: flex; align-items: center; gap: 12px; padding: 11px 0; border-bottom: 1px solid var(--border); }
+.prev-param:last-child { border-bottom: none; }
+.prev-name { font-size: 11px; color: var(--text2); width: 120px; flex-shrink: 0; }
+.prev-bar { flex: 1; height: 1px; background: var(--border2); position: relative; }
+.prev-fill { position: absolute; left: 0; top: 0; height: 1px; }
+.prev-score { font-family: 'IBM Plex Mono', monospace; font-size: 13px; width: 28px; text-align: right; flex-shrink: 0; }
+.c-green { color: var(--green); }
+.c-yellow { color: var(--yellow); }
+.c-red { color: var(--red); }
+.bg-green { background: var(--green); }
+.bg-yellow { background: var(--yellow); }
+.bg-red { background: var(--red); }
+
+/* ── CAMERA ── */
+.cam-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; background: #000; padding: 32px; }
+.vid-wrap { position: relative; width: 100%; max-width: 440px; }
+#video { width: 100%; aspect-ratio: 3/4; object-fit: cover; display: block; transform: scaleX(-1); }
+.corner { position: absolute; width: 18px; height: 18px; }
+.tl { top:0; left:0; border-top: 1px solid rgba(255,255,255,0.35); border-left: 1px solid rgba(255,255,255,0.35); }
+.tr { top:0; right:0; border-top: 1px solid rgba(255,255,255,0.35); border-right: 1px solid rgba(255,255,255,0.35); }
+.bl { bottom:0; left:0; border-bottom: 1px solid rgba(255,255,255,0.35); border-left: 1px solid rgba(255,255,255,0.35); }
+.br { bottom:0; right:0; border-bottom: 1px solid rgba(255,255,255,0.35); border-right: 1px solid rgba(255,255,255,0.35); }
+.cam-hint { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.2); text-align: center; margin-top: 14px; letter-spacing: 0.1em; }
+.shutter-row { margin-top: 28px; display: flex; justify-content: center; }
+.shutter { width: 58px; height: 58px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.25); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.shutter::after { content: ''; width: 44px; height: 44px; border-radius: 50%; background: var(--white); transition: all 0.15s; }
+.shutter:hover::after { width: 38px; height: 38px; background: #ccc; }
+.shutter:active::after { width: 32px; height: 32px; }
+#canvas { display: none; }
+
+/* ── PREVIEW ── */
+.prev-wrap { flex: 1; display: grid; grid-template-columns: 1fr 380px; min-height: calc(100vh - 61px); }
+.prev-img { background: #000; display: flex; align-items: center; justify-content: center; padding: 40px; }
+#preview-image { max-height: 72vh; width: 100%; max-width: 360px; object-fit: cover; display: block; }
+.prev-side { padding: 56px 40px; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid var(--border); }
+.side-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text3); letter-spacing: 0.15em; margin-bottom: 20px; }
+.side-title { font-size: 34px; font-weight: 700; color: var(--white); margin-bottom: 14px; line-height: 1.1; }
+.side-desc { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 32px; }
+.checklist { margin-bottom: 32px; display: flex; flex-direction: column; gap: 8px; }
+.chk { display: flex; align-items: center; gap: 10px; font-size: 12px; color: var(--text2); }
+.chk-line { width: 10px; height: 1px; background: var(--text3); flex-shrink: 0; }
+.btn-col { display: flex; flex-direction: column; gap: 8px; }
+
+/* ── SCANNING ── */
+.scan-wrap { flex: 1; display: grid; grid-template-columns: 1fr 380px; min-height: calc(100vh - 61px); }
+.scan-img { background: #000; display: flex; align-items: center; justify-content: center; padding: 40px; position: relative; overflow: hidden; }
+#scan-image { max-height: 72vh; width: 100%; max-width: 360px; object-fit: cover; display: block; filter: brightness(0.45); position: relative; z-index: 1; }
+.scan-beam { position: absolute; left: 40px; right: 40px; height: 1px; z-index: 2; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent); animation: beam 2s ease-in-out infinite; }
+@keyframes beam { 0%,100%{top:40px} 50%{top:calc(100% - 40px)} }
+.scan-side { padding: 56px 40px; display: flex; flex-direction: column; justify-content: center; border-left: 1px solid var(--border); background: var(--bg2); }
+.scan-tag { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text3); letter-spacing: 0.15em; margin-bottom: 20px; }
+.scan-title { font-size: 30px; font-weight: 700; color: var(--white); line-height: 1.15; margin-bottom: 36px; }
+.steps { display: flex; flex-direction: column; }
+.step { display: flex; align-items: center; gap: 14px; padding: 12px 0; border-bottom: 1px solid var(--border); opacity: 0.2; transition: opacity 0.4s; }
+.step:last-child { border-bottom: none; }
+.step.active { opacity: 1; }
+.step.done { opacity: 0.35; }
+.step-n { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text3); width: 18px; flex-shrink: 0; }
+.step.active .step-n { color: var(--white); }
+.step-l { font-size: 12px; color: var(--text2); }
+.step.active .step-l { color: var(--white); }
+.scan-pulse { margin-top: 28px; display: flex; align-items: center; gap: 10px; }
+.pulse-d { width: 4px; height: 4px; border-radius: 50%; background: var(--white); animation: pd 1.4s ease-in-out infinite; }
+@keyframes pd { 0%,100%{opacity:1} 50%{opacity:0.2} }
+.pulse-t { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--text3); }
+
+/* ── RESULTS ── */
+.res-top { display: grid; grid-template-columns: 1fr 1fr; border-bottom: 1px solid var(--border); }
+.score-panel { padding: 64px; display: flex; flex-direction: column; justify-content: center; border-right: 1px solid var(--border); }
+.score-lbl { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text3); letter-spacing: 0.15em; margin-bottom: 16px; }
+.score-num { font-family: 'IBM Plex Mono', monospace; font-size: 100px; font-weight: 400; line-height: 1; margin-bottom: 10px; transition: color 0.6s; }
+.score-verd { font-size: 17px; font-weight: 600; color: var(--white); margin-bottom: 8px; }
+.score-tag { font-size: 13px; color: var(--text2); line-height: 1.6; max-width: 300px; }
+
+.params-panel { padding: 48px 52px; display: flex; flex-direction: column; justify-content: center; }
+.params-hd { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text3); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 20px; }
+.p-row { display: flex; align-items: center; gap: 14px; padding: 13px 0; border-bottom: 1px solid var(--border); }
+.p-row:last-child { border-bottom: none; }
+.p-name { font-size: 11px; color: var(--text2); width: 120px; flex-shrink: 0; letter-spacing: 0.02em; }
+.p-track { flex: 1; height: 1px; background: var(--border2); position: relative; }
+.p-fill { position: absolute; left: 0; top: -1px; height: 3px; border-radius: 2px; transition: width 1.4s cubic-bezier(0.4,0,0.2,1); }
+.p-val { font-family: 'IBM Plex Mono', monospace; font-size: 15px; width: 30px; text-align: right; flex-shrink: 0; transition: color 0.5s; }
+
+/* TIPS */
+.tips-wrap { padding: 60px; border-top: 1px solid var(--border); }
+.tips-hd { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 36px; }
+.tips-ttl { font-size: 26px; font-weight: 700; color: var(--white); }
+.tips-ct { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text3); letter-spacing: 0.1em; }
+.tips-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--border); }
+.tip { background: var(--bg); padding: 28px 26px; transition: background 0.18s; }
+.tip:hover { background: var(--bg2); }
+.tip-pri { font-family: 'IBM Plex Mono', monospace; font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 12px; }
+.tip-pri.high { color: var(--red); }
+.tip-pri.medium { color: var(--yellow); }
+.tip-pri.low { color: var(--green); }
+.tip-ttl { font-size: 17px; font-weight: 600; color: var(--white); margin-bottom: 8px; line-height: 1.2; }
+.tip-body { font-size: 12px; color: var(--text2); line-height: 1.75; }
+
+/* FOOTER */
+.res-footer { padding: 24px 60px; border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+.foot-note { font-family: 'IBM Plex Mono', monospace; font-size: 10px; color: var(--text3); }
+
+/* FACE ERROR BANNER */
+#face-error {
+  display: none; background: rgba(240,80,58,0.1); border: 1px solid rgba(240,80,58,0.3);
+  color: var(--red); padding: 12px 16px; font-size: 12px; line-height: 1.6;
+  margin-bottom: 20px; font-family: 'IBM Plex Mono', monospace; letter-spacing: 0.02em;
+}
+
+/* TOAST */
+#toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(56px); background: var(--bg3); border: 1px solid var(--border2); color: var(--text); padding: 11px 22px; font-size: 11px; font-family: 'IBM Plex Mono', monospace; z-index: 200; transition: transform 0.3s; white-space: nowrap; pointer-events: none; }
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ANIM */
+@keyframes fu { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+.fu  { animation: fu 0.45s ease both; }
+.fu1 { animation: fu 0.45s 0.07s ease both; }
+.fu2 { animation: fu 0.45s 0.14s ease both; }
+.fu3 { animation: fu 0.45s 0.21s ease both; }
+
+/* RESPONSIVE */
+@media (max-width: 840px) {
+  nav { padding: 16px 20px; }
+  .home-wrap { grid-template-columns: 1fr; }
+  .home-right { display: none; }
+  .home-left { padding: 48px 24px; }
+  .home-title { font-size: 42px; }
+  .prev-wrap, .scan-wrap { grid-template-columns: 1fr; }
+  .prev-img, .scan-img { min-height: 40vh; padding: 20px; }
+  .prev-side, .scan-side { padding: 32px 20px; }
+  .res-top { grid-template-columns: 1fr; }
+  .score-panel { padding: 40px 24px; border-right: none; border-bottom: 1px solid var(--border); }
+  .score-num { font-size: 72px; }
+  .params-panel { padding: 32px 24px; }
+  .tips-wrap { padding: 40px 24px; }
+  .tips-grid { grid-template-columns: 1fr; }
+  .res-footer { padding: 20px 24px; flex-direction: column; gap: 12px; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div id="toast"></div>
+
+<!-- ══ HOME ══ -->
+<div id="screen-home" class="screen active">
+  <nav>
+    <div class="logo">LUMIS</div>
+    <div class="nav-tag">Skin Analysis</div>
+  </nav>
+  <div class="home-wrap">
+    <div class="home-left">
+      <div class="home-eyebrow fu">Dermal Analysis</div>
+      <div class="home-title fu1">Know your<br><span class="dim">skin.</span></div>
+      <p class="home-desc fu2">Take a selfie. Get a score across five skin areas with clear tips on what to fix.</p>
+      <div class="fu3"><button class="btn btn-fill" onclick="startCamera()">Begin Scan</button></div>
+    </div>
+    <div class="home-right">
+      <div class="preview-card">
+        <div class="prev-top">
+          <div class="prev-num">8.4</div>
+          <div class="prev-label">Overall Score</div>
+        </div>
+        <div class="prev-params">
+          <div class="prev-param">
+            <span class="prev-name">Acne &amp; Blemishes</span>
+            <div class="prev-bar"><div class="prev-fill bg-green" style="width:80%"></div></div>
+            <span class="prev-score c-green">8.0</span>
+          </div>
+          <div class="prev-param">
+            <span class="prev-name">Hydration</span>
+            <div class="prev-bar"><div class="prev-fill bg-green" style="width:85%"></div></div>
+            <span class="prev-score c-green">8.5</span>
+          </div>
+          <div class="prev-param">
+            <span class="prev-name">Redness &amp; Tone</span>
+            <div class="prev-bar"><div class="prev-fill bg-yellow" style="width:60%"></div></div>
+            <span class="prev-score c-yellow">6.0</span>
+          </div>
+          <div class="prev-param">
+            <span class="prev-name">Texture &amp; Pores</span>
+            <div class="prev-bar"><div class="prev-fill bg-red" style="width:45%"></div></div>
+            <span class="prev-score c-red">4.5</span>
+          </div>
+          <div class="prev-param">
+            <span class="prev-name">Dark Spots</span>
+            <div class="prev-bar"><div class="prev-fill bg-green" style="width:90%"></div></div>
+            <span class="prev-score c-green">9.0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CAMERA ══ -->
+<div id="screen-camera" class="screen">
+  <nav>
+    <div class="logo">LUMIS</div>
+    <button class="btn-ghost" onclick="stopCamera()">← Back</button>
+  </nav>
+  <div class="cam-body">
+    <div class="vid-wrap">
+      <video id="video" autoplay playsinline muted></video>
+      <div class="corner tl"></div><div class="corner tr"></div>
+      <div class="corner bl"></div><div class="corner br"></div>
+    </div>
+    <canvas id="canvas"></canvas>
+    <div class="cam-hint">face centred · zoom in close · good lighting · no filter</div>
+    <div class="shutter-row">
+      <button class="shutter" onclick="capturePhoto()" title="Capture"></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PREVIEW ══ -->
+<div id="screen-preview" class="screen">
+  <nav>
+    <div class="logo">LUMIS</div>
+    <div class="nav-tag">Confirm</div>
+  </nav>
+  <div class="prev-wrap">
+    <div class="prev-img">
+      <img id="preview-image" alt="Preview" />
+    </div>
+    <div class="prev-side">
+      <div class="side-tag">Ready</div>
+      <div id="face-error"></div>
+      <div class="side-title">Looks good?</div>
+      <p class="side-desc">Face clear, well-lit, and in focus for accurate results.</p>
+      <div class="checklist">
+        <div class="chk"><div class="chk-line"></div>Face clearly visible</div>
+        <div class="chk"><div class="chk-line"></div>Natural lighting</div>
+        <div class="chk"><div class="chk-line"></div>Minimal makeup</div>
+        <div class="chk"><div class="chk-line"></div>Sharp and in focus</div>
+      </div>
+      <div class="btn-col">
+        <button class="btn btn-fill" onclick="startAnalysis()">Analyse Skin</button>
+        <button class="btn" onclick="retake()">Retake</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SCANNING ══ -->
+<div id="screen-scanning" class="screen">
+  <nav>
+    <div class="logo">LUMIS</div>
+    <div class="nav-tag">Processing</div>
+  </nav>
+  <div class="scan-wrap">
+    <div class="scan-img">
+      <div class="scan-beam"></div>
+      <img id="scan-image" alt="Scan" />
+    </div>
+    <div class="scan-side">
+      <div class="scan-tag">Analysing</div>
+      <div class="scan-title">Reading your<br>skin profile</div>
+      <div class="steps" id="scan-steps">
+        <div class="step" data-i="0"><span class="step-n">01</span><span class="step-l">Detecting facial regions</span></div>
+        <div class="step" data-i="1"><span class="step-n">02</span><span class="step-l">Mapping pore structure</span></div>
+        <div class="step" data-i="2"><span class="step-n">03</span><span class="step-l">Analysing tone &amp; redness</span></div>
+        <div class="step" data-i="3"><span class="step-n">04</span><span class="step-l">Scoring hydration</span></div>
+        <div class="step" data-i="4"><span class="step-n">05</span><span class="step-l">Identifying blemishes</span></div>
+        <div class="step" data-i="5"><span class="step-n">06</span><span class="step-l">Generating report</span></div>
+      </div>
+      <div class="scan-pulse">
+        <div class="pulse-d"></div>
+        <div class="pulse-t" id="scan-status">Initialising…</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ RESULTS ══ -->
+<div id="screen-results" class="screen">
+  <nav>
+    <div class="logo">LUMIS</div>
+    <button class="btn" onclick="restart()" style="font-size:11px;padding:10px 22px;">New Scan</button>
+  </nav>
+  <div>
+    <div class="res-top">
+      <div class="score-panel">
+        <div class="score-lbl">Overall Score</div>
+        <div class="score-num" id="score-num">—</div>
+        <div class="score-verd" id="score-verd"></div>
+        <div class="score-tag" id="score-tag"></div>
+      </div>
+      <div class="params-panel">
+        <div class="params-hd">Breakdown</div>
+        <div id="params-list"></div>
+      </div>
+    </div>
+    <div class="tips-wrap">
+      <div class="tips-hd">
+        <div class="tips-ttl">What to do</div>
+        <div class="tips-ct" id="tips-ct"></div>
+      </div>
+      <div class="tips-grid" id="tips-grid"></div>
+    </div>
+    <div class="res-footer">
+      <div class="foot-note">Not a medical diagnosis · For guidance only</div>
+      <button class="btn btn-fill" onclick="restart()">New Scan</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API_BASE = '';
+  let stream = null, captured = null, scanTimer = null;
+
+  function show(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function showFaceError(msg) {
+    const banner = document.getElementById('face-error');
+    banner.textContent = msg;
+    banner.style.display = 'block';
+  }
+
+  function toast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3500);
+  }
+
+  function scoreColor(s) {
+    return s >= 7 ? 'c-green' : s >= 5 ? 'c-yellow' : 'c-red';
+  }
+  function scoreBg(s) {
+    return s >= 7 ? 'bg-green' : s >= 5 ? 'bg-yellow' : 'bg-red';
+  }
+
+  async function startCamera() {
+    show('screen-camera');
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 1600 } }, audio: false
+      });
+      document.getElementById('video').srcObject = stream;
+    } catch (e) {
+      toast('Camera access denied.');
+      show('screen-home');
+    }
+  }
+
+  function stopCamera() {
+    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+    show('screen-home');
+  }
+
+  function capturePhoto() {
+    const v = document.getElementById('video');
+    const c = document.getElementById('canvas');
+    c.width = v.videoWidth || 720; c.height = v.videoHeight || 960;
+    const ctx = c.getContext('2d');
+    ctx.translate(c.width, 0); ctx.scale(-1, 1);
+    ctx.drawImage(v, 0, 0);
+    captured = c.toDataURL('image/jpeg', 0.88);
+    if (stream) { stream.getTracks().forEach(t => t.stop()); stream = null; }
+    document.getElementById('preview-image').src = captured;
+    show('screen-preview');
+  }
+
+  function retake() {
+    captured = null;
+    document.getElementById('face-error').style.display = 'none';
+    show('screen-home');
+  }
+
+  const STEPS = [
+    'Detecting facial geometry…', 'Mapping skin texture…', 'Analysing tone…',
+    'Scoring hydration…', 'Identifying blemishes…', 'Generating report…'
+  ];
+
+  function setStep(i) {
+    document.querySelectorAll('.step').forEach((r, idx) => {
+      r.classList.remove('active', 'done');
+      if (idx < i) r.classList.add('done');
+      if (idx === i) r.classList.add('active');
+    });
+    document.getElementById('scan-status').textContent = STEPS[i] || 'Finalising…';
+  }
+
+  async function startAnalysis() {
+    document.getElementById('scan-image').src = captured;
+    show('screen-scanning');
+    let si = 0; setStep(0);
+    scanTimer = setInterval(() => { si++; if (si < 6) setStep(si); }, 1500);
+
+    const [header, b64] = captured.split(',');
+    const mt = header.match(/:(.*?);/)[1];
+
+    let result;
+    try {
+      const res = await fetch(`${API_BASE}/analyse`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ image_b64: b64, media_type: mt })
+      });
+      const data = await res.json();
+
+      // Face validation check
+      if (!data.ok && data.face_status) {
+        clearInterval(scanTimer);
+        const msgs = {
+          none:     'No face detected. Please take a close-up selfie with your face clearly visible.',
+          multiple: 'Multiple faces detected. Please take a selfie with only your face in the frame.',
+          too_far:  'Your face is too far away. Move closer and fill the frame for accurate results.'
+        };
+        showFaceError(msgs[data.face_status] || 'Face not detected. Please retake.');
+        show('screen-preview');
+        return;
+      }
+
+      if (!res.ok || !data.ok) throw new Error(data.error || 'Server error');
+      result = data.result;
+    } catch (e) {
+      clearInterval(scanTimer);
+      toast(`Analysis failed: ${e.message}`);
+      show('screen-preview');
+      return;
+    }
+
+    clearInterval(scanTimer);
+    renderResults(result);
+    show('screen-results');
+  }
+
+  const PRI = { high: 'Fix first', medium: 'Helpful', low: 'Bonus tip' };
+
+  function renderResults(r) {
+    const s = parseFloat(r.overall);
+    const cl = scoreColor(s);
+
+    const sn = document.getElementById('score-num');
+    sn.textContent = s.toFixed(1);
+    sn.className = 'score-num ' + cl;
+
+    document.getElementById('score-verd').textContent = r.verdict || '';
+    document.getElementById('score-tag').textContent = r.tagline || '';
+
+    // Params
+    const list = document.getElementById('params-list');
+    list.innerHTML = r.params.map((p, i) => {
+      const ps = parseFloat(p.score);
+      return `<div class="p-row">
+        <div class="p-name">${p.name}</div>
+        <div class="p-track"><div class="p-fill ${scoreBg(ps)}" id="pf${i}" style="width:0%"></div></div>
+        <div class="p-val ${scoreColor(ps)}">${ps.toFixed(1)}</div>
+      </div>`;
+    }).join('');
+    setTimeout(() => {
+      r.params.forEach((p, i) => {
+        document.getElementById('pf' + i).style.width = (parseFloat(p.score) / 10 * 100) + '%';
+      });
+    }, 200);
+
+    // Tips
+    document.getElementById('tips-ct').textContent = r.tips.length + ' recommendations';
+    document.getElementById('tips-grid').innerHTML = r.tips.map(t => `
+      <div class="tip">
+        <div class="tip-pri ${t.priority}">${PRI[t.priority] || 'Tip'}</div>
+        <div class="tip-ttl">${t.title}</div>
+        <div class="tip-body">${t.body}</div>
+      </div>
+    `).join('');
+  }
+
+  function restart() {
+    captured = null;
+    if (scanTimer) clearInterval(scanTimer);
+    show('screen-home');
+  }
+</script>
+</body>
+</html>
